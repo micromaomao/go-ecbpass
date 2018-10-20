@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 	"golang.org/x/crypto/scrypt"
 	"math/big"
+	"regexp"
 )
 
 func PBKDF2(password []byte, salt []byte) (result string) {
@@ -19,6 +20,20 @@ func Scrypt(password []byte, salt []byte) (result string) {
 		panic(err)
 	}
 	return baseStringEnc(dkey)
+}
+
+var hashhintReg = regexp.MustCompile("^[A-F0-5U\\-\\$]$")
+
+func Hashhint(password []byte) (result string) {
+	salt := []byte("hashspace_salt!!_")
+	dkey := pbkdf2.Key(password, salt, 250000, 16, sha256.New)
+	str := []rune(baseStringEnc(dkey))
+	for i, s := range str {
+		if !hashhintReg.MatchString(string(s)) {
+			str[i] = ' '
+		}
+	}
+	return string(str)
 }
 
 var table []rune = nil

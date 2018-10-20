@@ -122,6 +122,8 @@ func main() {
 			return
 		}
 		options.password = pw
+		hint := Hashhint(pw)
+		fmt.Fprintf(os.Stderr, "  \033[32mPassword hint: %v\033[0m\n", hint)
 	}
 
 	if len(options.urls) == 0 {
@@ -203,6 +205,8 @@ func doUrl(url string) {
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Unable to run xclip: %v.", err.Error())
 			os.Exit(1)
+		} else {
+			fmt.Fprint(os.Stderr, "Password copied.\n")
 		}
 	} else {
 		os.Stdout.WriteString(result + "\n")
