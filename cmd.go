@@ -127,7 +127,7 @@ func main() {
 	}
 
 	if len(options.urls) == 0 {
-		fmt.Fprintf(os.Stderr, "Enter url. Generated password will be printed.\n")
+		fmt.Fprintf(os.Stderr, "Enter url.\n")
 		for {
 			url, err, eof := readLine(os.Stdin)
 			if err != nil {
