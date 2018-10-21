@@ -69,6 +69,12 @@ func main() {
 			continue
 		}
 
+		if c == "--help" {
+			fmt.Fprint(os.Stdout, "Usage: go-ecbpass [-a <pbkdf2|scrypt>] [--clipboard=<always|no|auto>] [-p <password>] [urls..]\n"+
+				"For more info, see man go-ecbpass\n")
+			os.Exit(0)
+		}
+
 		if c == "--" {
 			dashdash = true
 			continue

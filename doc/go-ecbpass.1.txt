@@ -1,0 +1,47 @@
+GO-ECBPASS(1)
+=============
+:doctype: manpage
+
+NAME
+----
+go-ecbpass - pseudorandom password generator
+
+USAGE
+-----
+*go-ecbpass* [-a <pbkdf2|scrypt>] [--clipboard=<always|no|auto>] [-p '<password>'] [urls..]
+
+DESCRIPTION
+-----------
+*ecbpass* is a tool to generate pseudorandom password that can safely be used on various websites. The generated password is deterministic and is based on the user's master password and the domain of the URL provided.
+
+By default, it copies the generated password on to the user's clipboard so it can be pasted into the browser. This behavior can be overridden with the *--clipboard* flag.
+
+The URL can be entered to `stdin`, or it can also be specified from the command line (see usage).
+
+If the generated passwords are to be printed, it will go to `stdout` and all other messages (and prompts) will go to `stderr`.
+
+OPTIONS
+-------
+*-a* 'algorithm':: Specify the algorithm used. This is mostly here because of legacy. Available algorithms are *pbkdf2* and *scrypt*. Note that changing this will (obviously) produce different password, so think carefully. Use the default unless absolutely necessary. For compatibility reasons, the work required for *pbkdf2* (the iteration count) is less than *scrypt*, so it may be less secure. Default is *scrypt*.
+
+*--clipboard*=::
+  - *auto* (default): If `stdin` is a tty, generated passwords will not be printed and will be copied to clipboard with `xclip`.
+  - *always* Always copy to clipboard, regardless of the tty, and don't print passwords, *unless* `xclip` is not available, for which a warning will be displayed before prompting for the master password.
+  - *no*: Always print out results to `stdout` and never modify the clipboard.
+
+*-p* 'password'::
+Specify master password from the command line. If this option is not present, the master password will be prompted from the user, just like `sudo`. This is not recommended on multi-user system, because the command line of a process is available to read by everyone. Shell also stores a history if invoked from the command line.
+
+EXIT STATUS
+-----------
+*0*:: Success
+*1*:: Error
+
+AUTHOR
+------
+*go-ecbpass* is written by Mao Wtm <\m@maowtm.org>, originally intended for personal use.
+
+BUGS
+----
+If there are security issues with this software, please send details to \m@maowtm.org. Other bugs can be posted to GitHub Issues:
+https://github.com/micromaomao/go-ecbpass/issues/
