@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/micromaomao/myutil"
 	"golang.org/x/crypto/ssh/terminal"
 	"io"
 	"os"
@@ -133,10 +134,10 @@ func main() {
 	}
 
 	if len(options.urls) == 0 {
-		fmt.Fprintf(os.Stderr, "Enter url.\n")
+		fmt.Fprintf(os.Stderr, "Enter url. Press ctrl-d to exit.\n")
 		for {
-			url, err, eof := readLine(os.Stdin)
-			if err != nil {
+			url, err := myutil.ReadLine("URL> ")
+			if err != nil && err != io.EOF {
 				fmt.Fprintf(os.Stderr, "%v", err.Error())
 				os.Exit(1)
 				return
@@ -144,7 +145,8 @@ func main() {
 			if url != "" {
 				doUrl(url)
 			}
-			if eof {
+			if err == io.EOF {
+				fmt.Fprint(os.Stderr, "\n")
 				return
 			}
 		}
@@ -158,29 +160,6 @@ func main() {
 func argerror(err string) {
 	fmt.Fprintf(os.Stderr, "go-ecbpass: invalid argument: %v.\n", err)
 	os.Exit(1)
-}
-
-// Read a entire line, and no more, from `from`, and convert the result into string.
-// If the stream ended without newline, the string until it ends will be returned.
-func readLine(from *os.File) (line string, err error, eof bool) {
-	var stepSize int = 20
-	buf := make([]byte, stepSize)
-	var off int = 0
-	for {
-		readbuf := buf[off:]
-		n, err := from.Read(readbuf)
-		if err != nil && err != io.EOF {
-			return "", err, false
-		}
-		if n < len(readbuf) || (n == len(readbuf) && readbuf[n-1] == '\n') {
-			return strings.TrimRight(string(buf[0:off+n]), "\n"), nil, err == io.EOF
-		} else {
-			off += stepSize
-			newBuf := make([]byte, len(buf)+stepSize)
-			copy(newBuf, buf)
-			buf = newBuf
-		}
-	}
 }
 
 func doUrl(url string) {
