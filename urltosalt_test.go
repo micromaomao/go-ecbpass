@@ -10,15 +10,19 @@ func TestUrlToSalt(t *testing.T) {
 		url  string
 		salt string
 	}{
-		{"https://google.com", "google.com"},
-		{"http://google.com", "http://google.com"},
-		{"https://google.com:8043", "google.com"},
+		{"https://google.com", "google.com"},       // Simple.
+		{"http://google.com", "http://google.com"}, // No-secure urls get no-secure prefix.
+		{"https://google.com:8043", "google.com"},  // Port numbers are ignored.
 		{"http://google.com:8080", "http://google.com"},
-		{"https://subdomain.google.com", "google.com"},
+
+		{"https://subdomain.google.com", "google.com"}, // Don't include subdomain.
 		{"http://subdomain.google.com", "http://google.com"},
-		{"https://subdomain.github.io", "subdomain.github.io"},
+		{"https://subdomain.github.io", "subdomain.github.io"}, // Except if it is a public suffix.
 		{"http://subdomain.github.io", "http://subdomain.github.io"},
-		{"ftp://example.com", "ftp://example.com"},
+		{"https://our.warwick.ac.uk", "warwick.ac.uk"},
+		{"http://www.accommodation.manchester.ac.uk", "http://manchester.ac.uk"}, // Shame on mcr https not covering everything lol
+
+		{"ftp://example.com", "ftp://example.com"}, // Protocol passthrough
 		{"ftp://subdomain.example.com", "ftp://example.com"},
 		{"ftp://subdomain.github.io", "ftp://subdomain.github.io"},
 	}
