@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/micromaomao/myutil"
-	"golang.org/x/crypto/ssh/terminal"
 	"io"
 	"os"
 	"os/exec"
 	"strings"
 	"syscall"
+
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 var options = struct {
@@ -93,6 +93,11 @@ func main() {
 		options.urls = append(options.urls, c)
 	}
 
+	if len(options.urls) == 0 {
+		argerror("Need to provide one url.")
+		return
+	}
+
 	if options.putToClipboard && len(options.urls) > 1 {
 		options.putToClipboard = false
 		fmt.Fprint(os.Stderr, "Generated password will not be put to clipboard, because multiplt urls are provided on the command line.\n")
@@ -133,27 +138,8 @@ func main() {
 		fmt.Fprintf(os.Stderr, "  \033[32mPassword hint: %v\033[0m\n", hint)
 	}
 
-	if len(options.urls) == 0 {
-		fmt.Fprintf(os.Stderr, "Enter url. Press ctrl-d to exit.\n")
-		for {
-			url, err := myutil.ReadLine("URL> ")
-			if err != nil && err != io.EOF {
-				fmt.Fprintf(os.Stderr, "%v", err.Error())
-				os.Exit(1)
-				return
-			}
-			if url != "" {
-				doUrl(url)
-			}
-			if err == io.EOF {
-				fmt.Fprint(os.Stderr, "\n")
-				return
-			}
-		}
-	} else {
-		for _, url := range options.urls {
-			doUrl(url)
-		}
+	for _, url := range options.urls {
+		doUrl(url)
 	}
 }
 
