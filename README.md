@@ -11,7 +11,7 @@ Features
 * Accepts URL, domain is extracted automatically.
 * Automatic 'copy to clipboard' via `xclip`. (Linux only)
 * Entirely stateless. No backup needed.
-* You immediately realize it if you mistype the master password.
+* A "password hint" which can help you detect typo in your master password.
 
 Install
 -------

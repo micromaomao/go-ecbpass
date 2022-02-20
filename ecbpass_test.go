@@ -20,12 +20,12 @@ func Test1(t *testing.T) {
 		{"averyveryveryveryveryveryverylongpassword", "domain.com", "37Jnqbd`EtO", "3     F4           C"},
 	}
 	for i, tt := range tests {
-		t.Run(fmt.Sprintf("#%v: %v %v", string(i), tt.password, tt.salt), func(t *testing.T) {
+		t.Run(fmt.Sprintf("#%d: %v %v", i, tt.password, tt.salt), func(t *testing.T) {
 			if got := PBKDF2([]byte(tt.password), []byte(tt.salt)); got != tt.wantPBKDF {
 				t.Errorf("PBKDF2() = %v, want %v", got, tt.wantPBKDF)
 			}
 		})
-		t.Run(fmt.Sprintf("#%v hashhint", string(i)), func(t *testing.T) {
+		t.Run(fmt.Sprintf("#%v hashhint", i), func(t *testing.T) {
 			if got := strings.TrimRight(Hashhint([]byte(tt.password)), " "); got != tt.wantHashhint {
 				t.Errorf("Hashhint() = %v, want %v", got, tt.wantHashhint)
 			}
