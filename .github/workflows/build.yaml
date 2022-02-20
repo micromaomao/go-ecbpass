@@ -6,6 +6,7 @@ jobs:
     container:
       image: golang:alpine
     steps:
+      - run: apk add gcc
       - uses: actions/checkout@v2
       - run: go get && go build
       - run: go test
