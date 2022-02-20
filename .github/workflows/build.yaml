@@ -1,0 +1,15 @@
+name: Build and test
+on: [push, pull_request]
+jobs:
+  BuildAndTest:
+    runs-on: ubuntu-latest
+    container:
+      image: golang:alpine
+    steps:
+      - uses: actions/checkout@v2
+      - run: go get && go build
+      - run: go test
+      - uses: actions/upload-artifact@v2
+        with:
+          name: go-ecbpass
+          path: go-ecbpass
